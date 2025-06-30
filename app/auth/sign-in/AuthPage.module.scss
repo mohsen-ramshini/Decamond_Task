@@ -1,0 +1,48 @@
+.authSection {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  background-image: url('/images/background.jpg'); // مسیر عکس بک‌گراند
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white; // رنگ متن روی بک‌گراند
+}
+
+
+.title {
+  font-size: 3rem; /* text-5xl تقریبا */
+  font-weight: 800; /* font-extrabold */
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); /* drop-shadow-md */
+  letter-spacing: 0.05em; /* tracking-wide */
+  margin-bottom: 2.5rem; /* mb-10 */
+}
+
+.container {
+  width: 83.333333%; /* w-5/6 */
+  max-width: 60rem; /* lg:w-3/5 تقریبا */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statusMessage {
+  margin-top: 1rem; /* mt-4 */
+}
+
+.loadingText {
+  color: white;
+}
+
+.errorText {
+  color: #ef4444; /* text-red-500 */
+}
