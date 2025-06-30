@@ -20,9 +20,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormValues) => void;
+  loading?: boolean;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, loading = false }) => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -51,6 +52,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             {...register('username')}
             className={`${styles.input} ${errors.username ? styles.errorInput : ''}`}
             dir="ltr"
+            disabled={loading} // اضافه شد
           />
           {errors.username && <p className={styles.errorMessage}>{errors.username.message}</p>}
         </div>
@@ -65,6 +67,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
               {...register('password')}
               className={`${styles.input} ${errors.password ? styles.errorInput : ''}`}
               dir="ltr"
+              disabled={loading} // اضافه شد
             />
             <button
               type="button"
@@ -72,6 +75,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
               className={styles.showPasswordBtn}
               tabIndex={-1}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
+              disabled={loading} // اضافه شد
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -81,12 +85,27 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
 
         <a href="/forget-password" className={styles.forgetPasswordLink}>Forgot your password?</a>
 
-        <button type="submit" className={styles.submitBtn}>Sign In</button>
+        <button
+        type="submit"
+        className={styles.submitBtn}
+        disabled={loading}
+        >
+        {loading ? (
+            <>
+            
+            <span className={styles.spinner} />
+            </>
+        ) : (
+            'Sign In'
+        )}
+        </button>
+
 
         <button
           type="button"
           className={styles.ghostBtn}
           onClick={() => router.push('/auth/sign-up')}
+          disabled={loading} // اضافه شد
         >
           Don’t have an account? Sign Up
         </button>

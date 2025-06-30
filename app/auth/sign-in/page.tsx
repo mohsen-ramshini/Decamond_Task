@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '@/features/auth/api/use-login';
 import { LoginForm } from '@/features/auth/component/LoginForm';
 import { useUser } from '@/contexts/UserContext';
+import { Toaster, toast } from 'sonner';
 
 const Page = () => {
   const router = useRouter();
@@ -19,7 +20,6 @@ const Page = () => {
   const handleSubmit = (values: { username: string; password: string }) => {
     setLoading(true);
     setErrorMsg(null);
-    // اینجا refetch رو می‌زنیم که دوباره درخواست ارسال بشه
     refetch();
   };
 
@@ -28,6 +28,7 @@ const Page = () => {
       setLoading(false);
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
+      toast.success('ورود با موفقیت انجام شد');
       router.push('/dashboard');
     }
   }, [data, router, setUser]);
@@ -36,19 +37,20 @@ const Page = () => {
     if (error) {
       setLoading(false);
       setErrorMsg(error.message || 'Login failed');
+      toast.error(error.message || 'خطا در ورود');
     }
   }, [error]);
 
-return (
-  <section className={styles.authSection}>
-    <h1 className={styles.title}>Homino Safe</h1>
-    <div className={styles.container}>
-      <LoginForm onSubmit={handleSubmit} />
-      {loading && <p className={`${styles.statusMessage} ${styles.loadingText}`}>در حال ورود...</p>}
-      {errorMsg && <p className={`${styles.statusMessage} ${styles.errorText}`}>{errorMsg}</p>}
-    </div>
-  </section>
-);
+  return (
+    <>
+      <section className={styles.authSection}>
+        <h1 className={styles.title}>Decamond</h1>
+        <div className={styles.container}>
+          <LoginForm onSubmit={handleSubmit} loading={loading} />
+        </div>
+      </section>
+    </>
+  );
 };
 
 export default Page;
