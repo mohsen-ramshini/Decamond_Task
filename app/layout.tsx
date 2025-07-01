@@ -30,7 +30,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <QueryProvider>
             <UserProvider>
-              <Toaster position="top-center" />
+              <Toaster
+                dir="rtl"
+                position="top-right"
+              />
               {children}
             </UserProvider>
           </QueryProvider>
