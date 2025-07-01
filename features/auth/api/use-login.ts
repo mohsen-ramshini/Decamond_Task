@@ -21,5 +21,6 @@ export const useLogin = () => {
     queryFn: fetchRandomUser,
     staleTime: 1000 * 60 * 10, 
     enabled: false,
+    retry: false,
   });
 };

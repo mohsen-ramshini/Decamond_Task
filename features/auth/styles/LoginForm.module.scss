@@ -152,3 +152,21 @@
   vertical-align: middle;
   margin-left: 8px;
 }
+
+.phoneWrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.countryCodeSelect {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+}

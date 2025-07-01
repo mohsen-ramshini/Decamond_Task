@@ -93,8 +93,13 @@ const DashboardPage = () => {
   // While checking user info, show loading indicator
   if (checkingUser) {
     console.log('[Render] Checking user...');
-    return <div>Loading...</div>;
+    return (
+      <div className={styles.loadingOverlay}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
   }
+
 
   // If no user data available, render nothing (redirect handled in effects)
   if (!user) {
@@ -110,19 +115,21 @@ const DashboardPage = () => {
       {/* Notification container */}
       <Toaster position="top-right" />
 
-      <section className={styles.dashboard}>
-        <div className={styles.card}>
-          {/* User avatar */}
-          <img src={user.picture.large} alt="User Avatar" className={styles.avatar} />
+        <section className={styles.dashboard}>
+          <div className={styles.card}>
+            <img src={user.picture.large} alt="User Avatar" className={styles.avatar} />
+            <h1 className={styles.title}>
+              Welcome, {user.name.first} {user.name.last}
+            </h1>
+            <p className={styles.subtitle}>We're glad to have you here!</p>
 
-          {/* Welcome message with user name */}
-          <h1 className={styles.title}>
-            Welcome, {user.name.first} {user.name.last}
-          </h1>
+            {/* دکمه خروج */}
+            <button onClick={handleLogout} className={styles.logoutBtn}>
+              Log Out
+            </button>
+          </div>
+        </section>
 
-          <p className={styles.subtitle}>We're glad to have you here!</p>
-        </div>
-      </section>
     </>
   );
 };
