@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-
-
 export const patientSchema = z.object({
   role: z.literal("patient"),
   username: z.string().min(3),
