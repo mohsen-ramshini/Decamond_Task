@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { toast } from 'sonner';
 
 export interface User {
   gender: string;
@@ -16,7 +17,6 @@ export interface User {
     thumbnail: string;
   };
   nat: string;
-  // بقیه فیلدها در صورت نیاز اضافه کن
 }
 
 interface UserContextType {
@@ -30,7 +30,6 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // بارگذاری user از localStorage هنگام mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -38,7 +37,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // وقتی user تغییر کرد، تو localStorage ذخیره کن
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -50,6 +48,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    toast.success('You have been logged out');
   };
 
   return (
@@ -62,7 +61,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error('useUser باید داخل <UserProvider> استفاده شود');
+    throw new Error('useUser must be used within a UserProvider');
   }
   return context;
 };

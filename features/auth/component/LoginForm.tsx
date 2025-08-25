@@ -1,52 +1,53 @@
-import styles from './LoginForm.module.scss';
+import styles from './LoginForm.module.scss'; // مطمئن شو این فایل وجود دارد و کلاس‌ها درست تعریف شده‌اند
 import React, { useEffect, useState, useContext } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { motion } from "framer-motion";
-// import "flag-icons/css/flag-icons.min.css";
 import { useLogin } from "../api/use-login";
-import { User } from '../types/user';
 import { UserContext } from '@/contexts/UserContext';
+import { loginSchema } from '../types/schema';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
+
+
+const phoneLoginSchema = loginSchema.extend({
+  phone: z.string()
+    .regex(/^09\d{9}$/, { message: "Phone number must be 11 digits and start with 09" }),
+}).omit({ username: true });
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [shouldFetch, setShouldFetch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const { data, error, refetch } = useLogin();
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<z.infer<typeof phoneLoginSchema>>({
+    resolver: zodResolver(phoneLoginSchema),
+    mode: 'onSubmit',
+  });
+  const { data, error, isFetching } = useLogin({ enabled: shouldFetch });
   const router = useRouter();
   const userContext = useContext(UserContext);
   if (!userContext) throw new Error('UserContext not found');
   const { setUser } = userContext;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (values: z.infer<typeof phoneLoginSchema>) => {
     setIsLoading(true);
-    let data = { username: username.replace(/\D/g, ""), password };
-    try {
-      const result = await refetch();
-      setIsLoading(false);
-      if (result.data) {
-        await new Promise((res) => setTimeout(res, 1200));
-        router.push('/dashboard');
-      }
-    } catch {
-      setIsLoading(false);
-      await new Promise((res) => setTimeout(res, 1200));
-    }
+    setShouldFetch(true);
   };
-    // Define shouldFetch as needed, for example:
-    const shouldFetch = true; // Set this to your actual condition
-
-    useEffect(() => {
+  useEffect(() => {
     if (data && shouldFetch) {
+      setUser(data);
       toast.success('Logged in successfully');
+      setShouldFetch(false); 
       router.push('/dashboard');
     }
-    setIsLoading(false);
-  }, [data, setUser, router, shouldFetch]);
+    if (!isFetching) setIsLoading(false);
+    if (error && shouldFetch) {
+      setError("phone", { message: "Login failed" });
+      toast.error('Login failed');
+      setShouldFetch(false);
+    }
+  }, [data, setUser, router, isFetching, shouldFetch, error, setError]);
 
   return (
     <div className={styles['login-container']}>
@@ -55,22 +56,23 @@ export const LoginForm = () => {
         <p>Please enter your credentials to sign in!</p>
       </div>
 
-      <form onSubmit={handleSubmit} className={styles['login-form']}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles['login-form']}>
         <div className={styles['login-form-item']}>
-          <label className={styles['login-label']} htmlFor="phone">Phone</label>
+          <label className={styles['login-label']} htmlFor="phone">Phone Number</label>
           <input
             id="phone"
-            type="tel"
-            className={styles['login-input']}
-            placeholder="9123456789"
-            value={username.replace(/\D/g, "")}
-            onChange={e => setUsername(e.target.value.replace(/\D/g, ""))}
-            required
+            type="text"
+            className={styles['login-input'] + (errors.phone ? ' ' + styles['login-error-input'] : '')}
+            placeholder="Enter your phone number"
+            autoComplete="tel"
             dir="ltr"
-            autoComplete="username"
-            pattern="^9\d{9}$"
-            maxLength={10}
+            {...register('phone')}
           />
+          {errors.phone && (
+            <span className={styles['login-error-message']}>
+              {errors.phone.message as string}
+            </span>
+          )}
         </div>
 
         <div className={styles['login-form-item']}>
@@ -79,13 +81,11 @@ export const LoginForm = () => {
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              className={styles['login-input']}
+              className={styles['login-input'] + (errors.password ? ' ' + styles['login-error-input'] : '')}
               placeholder="Enter your password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              dir="ltr"
               autoComplete="current-password"
+              dir="ltr"
+              {...register('password')}
             />
             <button
               type="button"
@@ -96,10 +96,15 @@ export const LoginForm = () => {
               {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
             </button>
           </div>
+          {errors.password && (
+            <span className={styles['login-error-message']}>
+              {errors.password.message as string}
+            </span>
+          )}
         </div>
 
         <a
-          href="/auth/forget-password"
+          href=""
           className={styles['login-forget-password']}
         >
           Forgot password?
@@ -119,7 +124,7 @@ export const LoginForm = () => {
         <div className={styles['login-signup-row']}>
           <span>Don’t have an account yet?</span>
           <a
-            href="/auth/sign-up"
+            href=""
             className={styles['login-signup-link']}
             tabIndex={0}
           >

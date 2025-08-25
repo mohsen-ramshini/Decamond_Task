@@ -15,12 +15,12 @@ const fetchRandomUser = async (): Promise<User> => {
   return response.data.results[0];
 };
 
-export const useLogin = () => {
+export const useLogin = (options?: { enabled?: boolean }) => {
   return useQuery<User, Error>({
     queryKey: ['user'],
     queryFn: fetchRandomUser,
     staleTime: 1000 * 60 * 10, 
-    enabled: false,
+    enabled: options?.enabled ?? false,
     retry: false,
   });
 };

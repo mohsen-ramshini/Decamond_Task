@@ -1,5 +1,18 @@
+.login-signup-link {
+  color: #0070f3;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: color 0.2s;
+  padding-left: 5px;
+  &:hover {
+    color: #005bb5;
+    text-decoration: underline;
+  }
+}
+// increase form width
 .login-container {
-  max-width: 620px;
+  max-width: 720px;
   margin: 3.5rem auto 0;
   background: #fff;
   border-radius: 1.5rem;
@@ -46,12 +59,16 @@
   letter-spacing: 0.01em;
 }
 
+// add more right padding for eye icon
+// decrease input width for compact look
 .login-input {
-  padding: 0.85rem 1.1rem;
+  width: 320px;
+  max-width: 100%;
+  padding: 0.85rem 2.5rem 0.85rem 1.1rem;
   border: 1.5px solid #c3d0e6;
   border-radius: 0.7rem;
   font-size: 1.08rem;
-  background: #fafdff;
+  background: #ededed; /* Gray background */
   color: #1a1a1a;
   transition: border-color 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s;
   box-shadow: 0 1px 2px 0 rgba(0,112,243,0.03);
@@ -76,23 +93,38 @@
   padding-right: 0.2rem;
 }
 
+// ensure input and icon are aligned
 .login-password-wrapper {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .login-show-password-btn {
   position: absolute;
+  top: 50%;
   right: 0.7rem;
+  transform: translateY(-50%);
   background: transparent;
   border: none;
   cursor: pointer;
   color: #7a8ca3;
-  padding: 0.2rem;
+  padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  width: 2rem;
   transition: color 0.2s;
+  font-size: 1.25rem;
   &:hover {
     color: #0070f3;
+  }
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
   }
 }
 
@@ -113,7 +145,7 @@
 }
 
 .login-submit-btn {
-  background: linear-gradient(90deg, #0070f3 60%, #005bb5 100%);
+  background-color:#005bb5 ;
   color: #fff;
   border: none;
   border-radius: 0.8rem;
@@ -124,7 +156,7 @@
   box-shadow: 0 2px 8px 0 #0070f31a;
   transition: background 0.22s, box-shadow 0.22s;
   &:hover {
-    background: linear-gradient(90deg, #005bb5 0%, #0070f3 100%);
+    background-color: #0070f3;
     box-shadow: 0 4px 16px 0 #0070f32a;
   }
   &:active {
